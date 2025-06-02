@@ -1,2 +1,3 @@
-/dataset
-/weigths
+/dataset/depth224
+/dataset/rgb224
+/weigths/

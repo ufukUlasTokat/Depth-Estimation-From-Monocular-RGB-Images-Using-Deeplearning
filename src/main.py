@@ -8,7 +8,7 @@ def main():
     parser = argparse.ArgumentParser(description="Depth Estimation Trainer/Tester")
     parser.add_argument("--mode", type=str, choices=["train", "test"], required=True,
                         help="Choose 'train' to train the model or 'test' to evaluate it.")
-    parser.add_argument("--model", type=str, choices=["resnet18", "resnet34", "densenet", "mobilenet", "efficientnet"],
+    parser.add_argument("--model", type=str, choices=["resnet18", "resnet34", "densenet", "mobilenet", "effnet"],
                         required=True, help="Model architecture to use.")
     parser.add_argument("--dataset", type=str, choices=["sunrgbd", "nyudepth"], required=True,
                         help="Dataset to use.")

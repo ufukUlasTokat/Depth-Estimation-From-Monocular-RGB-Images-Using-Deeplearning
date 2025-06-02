@@ -59,10 +59,9 @@ class SunRGBDDataset(Dataset):
     def __init__(self, transform=None, max_samples=None, resize_size=(224, 224),
                  augment=False, virtual_length_multiplier=1):
         # Set paths directly
-        root_dir = "/dataset"
+        root_dir = "..\dataset"
         self.image_dir = os.path.join(root_dir, "rgb224")
         self.depth_dir = os.path.join(root_dir, "depth224")
-
         self.transform = transform
         self.resize_size = resize_size
         self.augment = augment

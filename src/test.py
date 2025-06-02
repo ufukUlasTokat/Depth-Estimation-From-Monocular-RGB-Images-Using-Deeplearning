@@ -22,17 +22,17 @@ def get_model(model_name):
         'resnet34': DepthRegressorResNet34,
         'densenet': DepthRegressorDenseNet,
         'mobilenet': DepthRegressorMobileNet,
-        'efficientnet': DepthRegressorEfficientNet
+        'effnet': DepthRegressorEfficientNet
     }
     if model_name not in models:
         raise ValueError(f"Model '{model_name}' not recognized.")
     return models[model_name]()
 
-def get_dataset(dataset_name, image_dir, depth_dir, transform, resize_size, max_samples):
+def get_dataset(dataset_name, transform, resize_size, max_samples):
     if dataset_name == "sunrgbd":
-        return SunRGBDDataset(image_dir, depth_dir, transform=transform, resize_size=resize_size, max_samples=max_samples)
+        return SunRGBDDataset(transform=transform, resize_size=resize_size, max_samples=max_samples)
     elif dataset_name == "nyudepth":
-        return NYUDepthDataset(image_dir, transform=transform, max_samples=max_samples)
+        return NYUDepthDataset(transform=transform, max_samples=max_samples, resize_size=resize_size)
     else:
         raise ValueError(f"Dataset '{dataset_name}' not recognized.")
 
@@ -84,7 +84,16 @@ def test_model(model_name, dataset_name, model_path, visualize_index=None):
     ])
 
     # === Load dataset ===
-    dataset = get_dataset(dataset_name, transform, resize_size, max_samples)
+    # === Load dataset ===
+    if dataset_name == "sunrgbd":
+        image_dir = "/dataset/rgb224"
+        depth_dir = "/dataset/depth224"
+        dataset = get_dataset(dataset_name, transform, resize_size, max_samples)
+    elif dataset_name == "nyudepth":
+        dataset = get_dataset(dataset_name, transform, resize_size, max_samples)
+    else:
+        raise ValueError(f"Unsupported dataset: {dataset_name}")
+
     loader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=2)
     print(f"✅ Loaded {len(dataset)} test samples.")
 
