@@ -74,7 +74,7 @@ python main.py --mode test --model efficientnet --dataset nyudepth --model_path 
   /datasets/rgb224/   ← extracted contents of rgb224.zip  
   /datasets/depth224/ ← extracted contents of depth224.zip
 - \texttt{dataset2} in file names refers to DIML dataset.
-- if you intend to use pretrained weigths they also need to be dowbloaded from google drive to a directory named /weigths
+- if you intend to use pretrained weigths they also need to be dowloaded from google drive link https://drive.google.com/drive/folders/1lexd7hia3oFVbZW3im_sEQpGUss1WOcE?usp=sharing to a directory named /weigths
 
 
 🤖 Author
