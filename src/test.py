@@ -52,6 +52,7 @@ def show_prediction(model, dataset, index, device):
     true_depth = true_depth.squeeze().numpy()
     image_np = unnormalize(image).permute(1, 2, 0).cpu().numpy()
 
+    # === Display plots ===
     plt.figure(figsize=(12, 4))
     plt.subplot(1, 3, 1)
     plt.imshow(image_np)
@@ -67,6 +68,7 @@ def show_prediction(model, dataset, index, device):
     plt.imshow(pred_depth, cmap='viridis')
     plt.title("Predicted Depth")
     plt.axis("off")
+
     plt.show()
 
 def test_model(model_name, dataset_name, model_path, visualize_index=None):
@@ -110,11 +112,11 @@ def test_model(model_name, dataset_name, model_path, visualize_index=None):
         for images, depths in tqdm(loader, desc="🧪 Testing"):
             images, depths = images.to(device), depths.to(device)
             outputs = model(images)
-            loss = criterion(outputs, depths)
+            loss = criterion(outputs*255, depths*255)
             total_loss += loss.item()
 
     avg_test_loss = total_loss / len(loader)
-    print(f"\n🔍 Average Test Loss (MSE): {avg_test_loss:.4f}")
+    print(f"\n🔍 Average Test Loss (MSE): {avg_test_loss:.8f}")
 
     # === Visualization (Optional) ===
     if visualize_index is not None:
