@@ -3,8 +3,7 @@ import cv2
 import torch
 import numpy as np
 from torch.utils.data import Dataset
-import kagglehub  # make sure to install kagglehub
-                  # pip install kagglehub
+import kagglehub 
 
 class NYUDepthDataset(Dataset):
     def __init__(self, transform=None, max_samples=None, resize_size=(224, 224)):
@@ -12,13 +11,11 @@ class NYUDepthDataset(Dataset):
         self.transform = transform
         self.samples = []
 
-        # === Step 1: Download Dataset if not already ===
         download_path = kagglehub.dataset_download("soumikrakshit/nyu-depth-v2")
-        print("✅ NYU Depth V2 dataset path:", download_path)
+        print("NYU Depth V2 dataset path:", download_path)
 
-        root_dir = os.path.join(download_path, "nyu_data/data", "nyu2_train")  # or nyu2_test for test data
+        root_dir = os.path.join(download_path, "nyu_data/data", "nyu2_train") 
 
-        # === Step 2: Parse samples ===
         for folder in sorted(os.listdir(root_dir)):
             folder_path = os.path.join(root_dir, folder)
             if os.path.isdir(folder_path):
@@ -45,7 +42,7 @@ class NYUDepthDataset(Dataset):
 
         depth = cv2.imread(depth_path, cv2.IMREAD_UNCHANGED)
         depth = cv2.resize(depth, self.resize_size)
-        depth = depth.astype(np.float32) / 1000.0  # from mm to meters
+        depth = depth.astype(np.float32) / 1000.0  
 
         if self.transform:
             rgb = self.transform(rgb)
@@ -58,7 +55,6 @@ class NYUDepthDataset(Dataset):
 class SunRGBDDataset(Dataset):
     def __init__(self, transform=None, max_samples=None, resize_size=(224, 224),
                  augment=False, virtual_length_multiplier=1):
-        # Set paths directly
         root_dir = "..\dataset"
         self.image_dir = os.path.join(root_dir, "rgb224")
         self.depth_dir = os.path.join(root_dir, "depth224")
@@ -67,7 +63,6 @@ class SunRGBDDataset(Dataset):
         self.augment = augment
         self.samples = []
 
-        # Match files based on the shared prefix (excluding _depth and _left)
         depth_files = sorted(f for f in os.listdir(self.depth_dir) if f.endswith("_disp.png"))
         for depth_fname in depth_files:
             base_id = depth_fname.replace("_disp.png", "")
@@ -99,7 +94,7 @@ class SunRGBDDataset(Dataset):
         rgb = cv2.cvtColor(rgb, cv2.COLOR_BGR2RGB)
         rgb = cv2.resize(rgb, self.resize_size)
         depth = cv2.resize(depth, self.resize_size)
-        depth = depth.astype(np.float32) / 1000.0  # convert mm to meters
+        depth = depth.astype(np.float32) / 1000.0
 
         if self.augment:
             if np.random.rand() < 0.5:

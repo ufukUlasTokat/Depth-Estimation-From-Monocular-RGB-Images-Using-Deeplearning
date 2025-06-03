@@ -52,7 +52,6 @@ def show_prediction(model, dataset, index, device):
     true_depth = true_depth.squeeze().numpy()
     image_np = unnormalize(image).permute(1, 2, 0).cpu().numpy()
 
-    # === Display plots ===
     plt.figure(figsize=(12, 4))
     plt.subplot(1, 3, 1)
     plt.imshow(image_np)
@@ -72,9 +71,8 @@ def show_prediction(model, dataset, index, device):
     plt.show()
 
 def test_model(model_name, dataset_name, model_path, visualize_index=None):
-    # === Setup ===
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(f"🖥️ Using device: {device}")
+    print(f"Using device: {device}")
     resize_size = (224, 224)
     batch_size = 8
     max_samples = 1000
@@ -85,8 +83,6 @@ def test_model(model_name, dataset_name, model_path, visualize_index=None):
                              std=[0.229, 0.224, 0.225])
     ])
 
-    # === Load dataset ===
-    # === Load dataset ===
     if dataset_name == "sunrgbd":
         image_dir = "/dataset/rgb224"
         depth_dir = "/dataset/depth224"
@@ -97,14 +93,12 @@ def test_model(model_name, dataset_name, model_path, visualize_index=None):
         raise ValueError(f"Unsupported dataset: {dataset_name}")
 
     loader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=2)
-    print(f"✅ Loaded {len(dataset)} test samples.")
+    print(f"Loaded {len(dataset)} test samples.")
 
-    # === Load model ===
     model = get_model(model_name).to(device)
     model.load_state_dict(torch.load(model_path, map_location=device))
     model.eval()
 
-    # === Evaluation ===
     criterion = nn.MSELoss()
     total_loss = 0.0
 
@@ -116,8 +110,7 @@ def test_model(model_name, dataset_name, model_path, visualize_index=None):
             total_loss += loss.item()
 
     avg_test_loss = total_loss / len(loader)
-    print(f"\n🔍 Average Test Loss (MSE): {avg_test_loss:.8f}")
+    print(f"\n Average Test Loss (MSE): {avg_test_loss:.8f}")
 
-    # === Visualization (Optional) ===
     if visualize_index is not None:
         show_prediction(model, dataset, visualize_index, device)

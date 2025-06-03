@@ -20,13 +20,13 @@ def main():
     args = parser.parse_args()
 
     if args.mode == "train":
-        print(f"🚀 Training {args.model} on {args.dataset}")
+        print(f"Training {args.model} on {args.dataset}")
         train_model(args.model, args.dataset)
 
     elif args.mode == "test":
         if not args.model_path:
             raise ValueError("You must specify --model_path in test mode.")
-        print(f"🧪 Testing {args.model} on {args.dataset}")
+        print(f"Testing {args.model} on {args.dataset}")
         test_model(model_name=args.model,
                    dataset_name=args.dataset,
                    model_path=args.model_path,

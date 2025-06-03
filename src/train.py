@@ -46,7 +46,6 @@ def get_dataset(dataset_name, transform, resize_size, max_samples, augment=False
         raise ValueError(f"Unsupported dataset: {dataset_name}")
 
 def train_model(model_name: str, dataset_name: str):
-    # === Config ===
     resize_size = (224, 224)
     batch_size = 8
     max_samples = 100000000
@@ -62,7 +61,6 @@ def train_model(model_name: str, dataset_name: str):
                              std=[0.229, 0.224, 0.225])
     ])
 
-    # === Dataset Preparation ===
     full_dataset = get_dataset(dataset_name, transform, resize_size, max_samples)
 
     indices = torch.randperm(len(full_dataset)).tolist()
@@ -86,17 +84,15 @@ def train_model(model_name: str, dataset_name: str):
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=2)
 
-    # === Model Init ===
     model = get_model(model_name).to(device)
     criterion = nn.SmoothL1Loss()
     optimizer = optim.Adam(model.parameters(), lr=1e-4)
 
-    # === Training Loop ===
     best_val_loss = float('inf')
     train_losses, val_losses = [], []
 
     for epoch in range(num_epochs):
-        print(f"\n🚀 Epoch {epoch + 1}/{num_epochs}")
+        print(f"\n Epoch {epoch + 1}/{num_epochs}")
         model.train()
         total_train_loss = 0.0
 
@@ -124,19 +120,18 @@ def train_model(model_name: str, dataset_name: str):
         avg_val_loss = total_val_loss / len(val_loader)
         val_losses.append(avg_val_loss)
 
-        print(f"✅ Train Loss: {avg_train_loss:.4f}, Val Loss: {avg_val_loss:.4f}")
+        print(f"Train Loss: {avg_train_loss:.4f}, Val Loss: {avg_val_loss:.4f}")
 
         if avg_val_loss < best_val_loss:
             best_val_loss = avg_val_loss
             torch.save(model.state_dict(), best_model_path)
-            print(f"💾 New best model saved at {best_model_path}")
+            print(f"New best model saved at {best_model_path}")
 
-    # === Save Losses to CSV ===
     with open(loss_csv_path, "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["Epoch", "Train Loss", "Val Loss"])
         for i in range(num_epochs):
             writer.writerow([i+1, train_losses[i], val_losses[i]])
 
-    print(f"📉 Losses saved to {loss_csv_path}")
-    print(f"🏁 Training complete for {model_name} on {dataset_name}")
+    print(f"Losses saved to {loss_csv_path}")
+    print(f"Training complete for {model_name} on {dataset_name}")
