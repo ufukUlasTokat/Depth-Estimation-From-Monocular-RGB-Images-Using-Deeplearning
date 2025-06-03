@@ -1,0 +1,8 @@
+torch
+torchvision
+torchaudio
+kagglehub
+opencv-python
+numpy
+matplotlib
+tqdm

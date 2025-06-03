@@ -43,7 +43,9 @@ diml        | RGB-D Zip Files: https://drive.google.com/drive/folders/1lexd7hia3
 
 ⚙️ Setup
 
+run thşs line before requirements if you intent to use Cuda pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
 pip install -r requirements.txt
+cuda driver 12.8 or higher must be installed.
 
 If you're using NYU, install KaggleHub:
 
@@ -63,6 +65,7 @@ python main.py --mode test --model efficientnet --dataset nyudepth --model_path 
   - Example: \texttt{resnet34\_best\_dataset2.pth} refers to ResNet34 trained on DIML dataset.
 - CSV training logs are saved in the \texttt{losses/} folder as: MODELNAME\_losses\_DATASET.csv
   - Each file contains per-epoch training and validation loss.
+  - CSV file contains non normalized losses. Values must be multiplyed with 255*255
 
 📌 Notes
 
@@ -71,6 +74,7 @@ python main.py --mode test --model efficientnet --dataset nyudepth --model_path 
   /datasets/rgb224/   ← extracted contents of rgb224.zip  
   /datasets/depth224/ ← extracted contents of depth224.zip
 - \texttt{dataset2} in file names refers to DIML dataset.
+- if you intend to use pretrained weigths they also need to be dowbloaded from google drive to a directory named /weigths
 
 
 🤖 Author
